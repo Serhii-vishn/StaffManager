@@ -1,0 +1,54 @@
+﻿@model List<EmployeeManagementAPI.Models.Employee>
+<form>
+	<button asp-action="Create" asp-controller="Employee" class="btn btn-primary mb-3"> Add Employee</button>
+	<table class="table table-responsive table-bordered table-hover">
+		<thead>
+			<tr class="table-active">
+				<th>Id</th>
+				<th>FullName</th>
+				<th>Address</th>
+				<th>PhoneNumber</th>
+				<th>DateOfBirth</th>
+				<th>HireDate</th>
+				<th>Salary</th>
+				<th>Position</th>
+				<th>Department</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if(Model != null && Model.Any())
+			{
+				@foreach(var employee in Model)
+				{
+					<tr>
+						<th>@employee.EmployeeId</th>
+						<th>@employee.FullName</th>
+						<th>@employee.Residence</th>
+						<th>@employee.PhoneNumber</th>
+						<th>@employee.DateOfBirth</th>
+						<th>@employee.HireDate</th>
+						<th>@employee.Salary</th>
+						<th>@employee.Position</th>
+						<th>@employee.DepartmentName</th>
+						<th>
+							<div class="btn-group btn-group-sm">
+								<a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-primary">Edit</a>
+								<a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger">Delete</a>
+							</div>
+						</th>
+					</tr>
+				}
+			}
+			else
+			{
+				<tr>
+					<td colspan="6">
+						<div>
+							No Employees available at this moment
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</form>
