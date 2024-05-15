@@ -34,7 +34,7 @@
             return employee;
         }
 
-        public async Task<IList<Employee>> ListAsync(string? sortOrder, string? sortColumn, string? sortDirection)
+        public async Task<IList<Employee>> ListAsync(string? sortOrder, string? sortColumn, string? searchName, List<string> positions)
         {
 			var employeesList = new List<Employee>();
 			using (var connection = new SqlConnection(_provider.GetConnectionString()))
@@ -42,16 +42,25 @@
 				using (var command = connection.CreateCommand())
 				{
 					command.CommandType = CommandType.StoredProcedure;
-					command.CommandText = "GetAllEmployees";
+                    command.CommandText = "GetAllEmployees";
 
-					if (!string.IsNullOrEmpty(sortOrder) && !string.IsNullOrEmpty(sortColumn))
+                    if (!string.IsNullOrEmpty(sortOrder) && !string.IsNullOrEmpty(sortColumn) || positions.Any())
                     {
-						command.CommandText = "GetAllEmployeesSorted";
-						command.Parameters.AddWithValue("@sortedOrder", sortOrder);
-						command.Parameters.AddWithValue("@sortedColumn", sortColumn);
+                        command.CommandText = "GetAllEmployeesSorted";
+                        command.Parameters.AddWithValue("@sortedOrder", sortOrder);
+                        command.Parameters.AddWithValue("@sortedColumn", sortColumn);
+
+						var positionsParams = string.Join(",", positions);
+                        command.Parameters.AddWithValue("@positions", positionsParams);
+                    }
+
+                    if(!string.IsNullOrEmpty(searchName))
+                    {
+						command.CommandText = "SearchEmployeeByName";
+						command.Parameters.AddWithValue("@searchString", searchName);
 					}
 
-					await connection.OpenAsync();
+                    await connection.OpenAsync();
 
 					using (var reader = await command.ExecuteReaderAsync())
 					{

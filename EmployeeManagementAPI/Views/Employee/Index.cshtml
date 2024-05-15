@@ -1,17 +1,17 @@
 ﻿@model List<EmployeeManagementAPI.Models.Employee>
 <form>
 	<button asp-action="Create" asp-controller="Employee" class="btn btn-primary mb-3"> Add Employee</button>
-	<div class="row">
-		<form asp-action="Employees">
-			<div class="row">
-				<div class="col-md-4">
-					<input name="term" class="form-control" placeholder="Search by name" />
+	<div class="row mb-3">
+		<div class="col-md-4">
+			<form method="get" action="/Employee/Index">
+				<div class="input-group">
+					<input type="text" name="searchName" class="form-control" placeholder="Search by Name" aria-label="Search by Name">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" type="submit">Search</button>
+					</div>
 				</div>
-				<div class="col-md-3">
-					<button type="submit" class="btn btn-info mb-2">Search</button>
-				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 	<table class="table table-responsive table-bordered table-hover">
 		<thead>
@@ -76,7 +76,33 @@
 						</span>
 					</a>
 				</th>
-				<th>Position</th>
+				<th>
+					<div class="dropdown">
+						<dt onclick="toggleDropdown()">
+							<a href="#">
+								<span class="hida">Position</span>
+								<p class="multiSel"></p>
+							</a>
+						</dt>
+						<dd id="dropdown-content" class="dropdown-content">
+							@using (Html.BeginForm("Index", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+							{
+								<div class="mutliSelect">
+									<ul>
+										@foreach (var position in ViewBag.Positions)
+										{
+											<li>
+												<input type="checkbox" id="position_@position" name="positions" value="@position.Name" />
+												<label for="position_@position">@position.Name</label>
+											</li>
+										}
+									</ul>
+									<input type="submit" value="Filter" />
+								</div>
+							}
+						</dd>
+					</div>
+				</th>
 				<th>Department</th>
 			</tr>
 		</thead>

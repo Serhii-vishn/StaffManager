@@ -39,6 +39,7 @@ img {
 
 .table thead {
     font-size: 1rem;
+    vertical-align: text-top;
 }
 
 .table th,
@@ -52,24 +53,80 @@ img {
     margin-left: 1px;
 }
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown dt a {
+    padding: 10px;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content .mutliSelect {
+    padding: 5px;
+}
+
+.dropdown-content ul {
+    text-align: left;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-content li {
+    padding: 5px;
+}
+
+.dropdown-content li:hover {
+    background-color: #ddd;
+}
+
+.dropdown-content input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+}
+
+.dropdown-content input[type="submit"]:hover {
+    background-color: #333;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
 .navbar {
     font-size: 1.2rem;
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
 }
 
-    .navbar .container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 2rem;
-    }
+.navbar .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2rem;
+}
 
-    .navbar ul {
-        justify-self: flex-end;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.navbar ul {
+    justify-self: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 .section-b {
