@@ -21,19 +21,19 @@
 				@foreach(var employee in Model)
 				{
 					<tr>
-						<th>@employee.EmployeeId</th>
+						<th>@employee.Id</th>
 						<th>@employee.FullName</th>
 						<th>@employee.Residence</th>
 						<th>@employee.PhoneNumber</th>
 						<th>@employee.DateOfBirth</th>
 						<th>@employee.HireDate</th>
-						<th>@employee.Salary</th>
-						<th>@employee.Position</th>
-						<th>@employee.DepartmentName</th>
+						<th>@employee.Salary</th>					
+						<th>@employee.Position.Name</th>
+						<th>@employee.Department.Name</th>
 						<th>
 							<div class="btn-group btn-group-sm">
-								<a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-primary">Edit</a>
-								<a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger">Delete</a>
+								<a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-primary">Edit</a>
+								<a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.Id" class="btn btn-danger">Delete</a>
 							</div>
 						</th>
 					</tr>
