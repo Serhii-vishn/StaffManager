@@ -189,6 +189,7 @@
             {
                 throw new ArgumentException("Invalid date of bith", nameof(employee.DateOfBirth));
             }
+
             if (employee.HireDate < DateOnly.Parse("2000-01-01"))
             {
                 throw new ArgumentException("Invalid date of hire", nameof(employee.HireDate));
@@ -208,6 +209,11 @@
                 {
                     throw new ArgumentException(nameof(employee.PhoneNumber), "Phone number is invalid");
                 }
+            }
+
+            if (employee.Salary <= 0)
+            {
+                throw new ArgumentException("Invalid salary", nameof(employee.Salary));
             }
         }
     }

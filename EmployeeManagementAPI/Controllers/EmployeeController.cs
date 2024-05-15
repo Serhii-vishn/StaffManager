@@ -1,6 +1,7 @@
 ﻿using EmployeeManagementAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Reflection;
 
 namespace EmployeeManagementAPI.Controllers
 {
@@ -102,7 +103,7 @@ namespace EmployeeManagementAPI.Controllers
                 {
                     TempData["errorMessage"] = $"Employee with id = {id} does not exist";
                     return RedirectToAction("Index");
-                }                
+                }
                 return View(employee);
             }
             catch (ArgumentException ex)
@@ -143,13 +144,19 @@ namespace EmployeeManagementAPI.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _employeeRepository.DeleteAsync(id);
-                _logger.LogInformation($"Deleted employee id - {id}");
+                var employee = await _employeeRepository.GetAsync(id);
+                if (employee.Id <= 0)
+                {
+                    TempData["errorMessage"] = $"Employee with id = {id} does not exist";
+                    return RedirectToAction("Index");
+                }
+
+                var result = await _employeeRepository.DeleteAsync(id);
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex)
