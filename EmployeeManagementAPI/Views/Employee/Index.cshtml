@@ -1,6 +1,18 @@
 ﻿@model List<EmployeeManagementAPI.Models.Employee>
 <form>
 	<button asp-action="Create" asp-controller="Employee" class="btn btn-primary mb-3"> Add Employee</button>
+	<div class="row">
+		<form asp-action="Employees">
+			<div class="row">
+				<div class="col-md-4">
+					<input name="term" class="form-control" placeholder="Search by name" />
+				</div>
+				<div class="col-md-3">
+					<button type="submit" class="btn btn-info mb-2">Search</button>
+				</div>
+			</div>
+		</form>
+	</div>
 	<table class="table table-responsive table-bordered table-hover">
 		<thead>
 			<tr class="table-active">
@@ -8,9 +20,62 @@
 				<th>FullName</th>
 				<th>Address</th>
 				<th>PhoneNumber</th>
-				<th>DateOfBirth</th>
-				<th>HireDate</th>
-				<th>Salary</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.DateOfBirthSortParam" asp-route-sortColumn="DateOfBirth">
+						DateOfBirth         
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "DateOfBirth")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+									
+								}
+							}
+						</span>
+					</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.HireDateSortParam" asp-route-sortColumn="HireDate">HireDate
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "HireDate")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+
+								}
+							}
+						</span>
+					</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.SalarySortParam" asp-route-sortColumn="Salary">
+						Salary
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "Salary")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+
+								}
+							}
+						</span>
+					</a>
+				</th>
 				<th>Position</th>
 				<th>Department</th>
 			</tr>

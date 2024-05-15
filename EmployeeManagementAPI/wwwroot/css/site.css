@@ -37,10 +37,19 @@ img {
     width: 100%;
 }
 
+.table thead {
+    font-size: 1rem;
+}
+
 .table th,
 .table td {
     text-align: center;
-    width:auto;
+    width: auto;
+}
+
+.sort-arrow {
+    display: inline-block;
+    margin-left: 1px;
 }
 
 .navbar {

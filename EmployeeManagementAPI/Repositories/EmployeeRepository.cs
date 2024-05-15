@@ -34,7 +34,7 @@
             return employee;
         }
 
-        public async Task<IList<Employee>> ListAsync(string? searchName, string? sortColumn, string? sortDirection)
+        public async Task<IList<Employee>> ListAsync(string? sortOrder, string? sortColumn, string? sortDirection)
         {
 			var employeesList = new List<Employee>();
 			using (var connection = new SqlConnection(_provider.GetConnectionString()))
@@ -43,6 +43,13 @@
 				{
 					command.CommandType = CommandType.StoredProcedure;
 					command.CommandText = "GetAllEmployees";
+
+					if (!string.IsNullOrEmpty(sortOrder) && !string.IsNullOrEmpty(sortColumn))
+                    {
+						command.CommandText = "GetAllEmployeesSorted";
+						command.Parameters.AddWithValue("@sortedOrder", sortOrder);
+						command.Parameters.AddWithValue("@sortedColumn", sortColumn);
+					}
 
 					await connection.OpenAsync();
 

@@ -1,4 +1,6 @@
-﻿namespace EmployeeManagementAPI.Controllers
+﻿using System.Data.SqlClient;
+
+namespace EmployeeManagementAPI.Controllers
 {
     public class EmployeeController : Controller
     {
@@ -19,11 +21,17 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? searchName, string? sortColumn, string? sortDirection)
+        public async Task<IActionResult> Index(string? sortColumn, string? sortOrder)
         {
-            try
+			ViewBag.DateOfBirthSortParam = sortOrder == "asc" && sortColumn == "DateOfBirth" ? "desc" : "asc";
+			ViewBag.HireDateSortParam = sortOrder == "asc" && sortColumn == "HireDate" ? "desc" : "asc";
+			ViewBag.SalarySortParam = sortOrder == "asc" && sortColumn == "Salary" ? "desc" : "asc";
+
+			ViewBag.CurrentSortColumn = sortColumn;
+			ViewBag.CurrentSortOrder = sortOrder;
+			try
             {
-                var employees = await _employeeRepository.ListAsync(searchName, sortColumn, sortDirection);
+                var employees = await _employeeRepository.ListAsync(sortOrder, sortColumn, "sortDirection");
                 _logger.LogInformation($"Employees (count = {employees.Count}) were received");
                 return View(employees);
             }
