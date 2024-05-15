@@ -1,6 +1,18 @@
 ﻿@model List<EmployeeManagementAPI.Models.Employee>
 <form>
 	<button asp-action="Create" asp-controller="Employee" class="btn btn-primary mb-3"> Add Employee</button>
+	<div class="row mb-3">
+		<div class="col-md-4">
+			<form method="get" action="/Employee/Index">
+				<div class="input-group">
+					<input type="text" name="searchName" class="form-control" placeholder="Search by Name" aria-label="Search by Name">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" type="submit">Search</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<table class="table table-responsive table-bordered table-hover">
 		<thead>
 			<tr class="table-active">
@@ -8,10 +20,89 @@
 				<th>FullName</th>
 				<th>Address</th>
 				<th>PhoneNumber</th>
-				<th>DateOfBirth</th>
-				<th>HireDate</th>
-				<th>Salary</th>
-				<th>Position</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.DateOfBirthSortParam" asp-route-sortColumn="DateOfBirth">
+						DateOfBirth         
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "DateOfBirth")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+									
+								}
+							}
+						</span>
+					</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.HireDateSortParam" asp-route-sortColumn="HireDate">HireDate
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "HireDate")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+
+								}
+							}
+						</span>
+					</a>
+				</th>
+				<th>
+					<a asp-action="Index" asp-route-sortOrder="@ViewBag.SalarySortParam" asp-route-sortColumn="Salary">
+						Salary
+						<span class="sort-arrow">
+							@if (ViewBag.CurrentSortColumn == "Salary")
+							{
+								@if (ViewBag.CurrentSortOrder == "asc")
+								{
+									<small>&#9660;</small>
+								}
+								else
+								{
+									<small>&#9650;</small>
+
+								}
+							}
+						</span>
+					</a>
+				</th>
+				<th>
+					<div class="dropdown">
+						<dt onclick="toggleDropdown()">
+							<a href="#">
+								<span class="hida">Position</span>
+								<p class="multiSel"></p>
+							</a>
+						</dt>
+						<dd id="dropdown-content" class="dropdown-content">
+							@using (Html.BeginForm("Index", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+							{
+								<div class="mutliSelect">
+									<ul>
+										@foreach (var position in ViewBag.Positions)
+										{
+											<li>
+												<input type="checkbox" id="position_@position" name="positions" value="@position.Name" />
+												<label for="position_@position">@position.Name</label>
+											</li>
+										}
+									</ul>
+									<input type="submit" value="Filter" />
+								</div>
+							}
+						</dd>
+					</div>
+				</th>
 				<th>Department</th>
 			</tr>
 		</thead>
@@ -21,19 +112,19 @@
 				@foreach(var employee in Model)
 				{
 					<tr>
-						<th>@employee.EmployeeId</th>
+						<th>@employee.Id</th>
 						<th>@employee.FullName</th>
 						<th>@employee.Residence</th>
 						<th>@employee.PhoneNumber</th>
 						<th>@employee.DateOfBirth</th>
 						<th>@employee.HireDate</th>
-						<th>@employee.Salary</th>
-						<th>@employee.Position</th>
-						<th>@employee.DepartmentName</th>
+						<th>@employee.Salary</th>					
+						<th>@employee.Position.Name</th>
+						<th>@employee.Department.Name</th>
 						<th>
 							<div class="btn-group btn-group-sm">
-								<a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-primary">Edit</a>
-								<a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-danger">Delete</a>
+								<a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-primary">Edit</a>
+								<a asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.Id" class="btn btn-danger">Delete</a>
 							</div>
 						</th>
 					</tr>

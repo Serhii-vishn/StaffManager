@@ -1,4 +1,22 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function toggleDropdown() {
+    document.getElementById("dropdown-content").classList.toggle("show");
+}
 
-// Write your JavaScript code.
+window.onclick = function (event) {
+    if (!event.target.closest('.dropdown')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+document.querySelector('.dropdown-form').addEventListener('submit', function () {
+    var dropdown = document.getElementById("dropdown-content");
+    if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+    }
+});

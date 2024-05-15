@@ -1,8 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IConnectionProvider, ConnectionProvider>();
 
-builder.Services.AddTransient<IEmployeeDAL, EmployeeDAL>();
+builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddTransient<IPositionRepository, PositionRepository>();
+builder.Services.AddTransient<ICompanyInfoRepository, CompanyInfoRepository>();
 
 var app = builder.Build();
 
