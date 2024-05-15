@@ -6,6 +6,7 @@ builder.Services.AddTransient<IConnectionProvider, ConnectionProvider>();
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddTransient<IPositionRepository, PositionRepository>();
+builder.Services.AddTransient<ICompanyInfoRepository, CompanyInfoRepository>();
 
 var app = builder.Build();
 

@@ -1,7 +1,19 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model EmployeeManagementAPI.Models.ViewModels.CompanyInfoViewModel
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">WELCOME</h1>
 </div>
+
+<section id="about" class="section-b">
+    <div class="overlay">
+        <div class="section-b-inner py-5">
+            <h2 class="text-2">@Model.CompanyName</h2>
+            <h4 class="text-2">@Model.PhysicalAddress</h4>         
+
+            <div class="contact-info mt-3">
+                <p><strong>Contact Phone:</strong> @Model.ContactPhone</p>
+                <p><strong>Email:</strong> <a href="mailto:@Model.Email">@Model.Email</a></p>
+            </div>
+        </div>
+    </div>
+</section>

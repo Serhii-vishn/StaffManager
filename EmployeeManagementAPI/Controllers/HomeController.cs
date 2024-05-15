@@ -3,15 +3,18 @@ namespace EmployeeManagementAPI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ICompanyInfoRepository _companyInfoRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICompanyInfoRepository companyInfoRepository, ILogger<HomeController> logger)
         {
             _logger = logger;
+            _companyInfoRepository = companyInfoRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _companyInfoRepository.GetAsync();
+            return View(result);
         }
     }
 }

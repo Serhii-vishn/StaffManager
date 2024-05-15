@@ -1,9 +1,4 @@
-﻿using EmployeeManagementAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Reflection;
-
-namespace EmployeeManagementAPI.Controllers
+﻿namespace EmployeeManagementAPI.Controllers
 {
     public class EmployeeController : Controller
     {
