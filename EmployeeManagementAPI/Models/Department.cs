@@ -4,6 +4,6 @@
     {
         [Key]
         public int Id { get; set; }
-        public string DepartmentName { get; set; } = null!;
+        public string Name { get; set; } = null!;
     }
 }
