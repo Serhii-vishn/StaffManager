@@ -1,0 +1,29 @@
+﻿@model EmployeeManagementAPI.Models.Employee
+
+<form asp-action="Edit" asp-controller="Employee" method="post">
+    <div class="form-group">
+        <label asp-for="FullName"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Residence"></label>
+        <input asp-for="Residence" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="PhoneNumber">Phone Number</label>
+        <input asp-for="PhoneNumber" class="form-control" type="tel" pattern="[0-9]*" inputmode="numeric" />
+    </div>
+    <div class="form-group">
+        <label asp-for="DateOfBirth">Birthday</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" value="1950-01-01" />
+    </div>
+    <div class="form-group">
+        <label asp-for="HireDate">Hire date</label>
+        <input asp-for="HireDate" type="date" class="form-control" value="2000-01-01" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Salary"></label>
+        <input asp-for="Salary" type="number" step="0.01" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Update</button>
+</form>

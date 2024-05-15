@@ -1,4 +1,4 @@
-﻿namespace EmployeeManagementAPI.DAL.Interfaces
+﻿namespace EmployeeManagementAPI.Repository.Interfaces
 {
 	public interface IConnectionProvider
 	{

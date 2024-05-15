@@ -3,13 +3,9 @@
     public class EmployeeCreateViewModel
     {
         public string FullName { get; set; } = null!;
-
         public string Residence { get; set; } = null!;
-
         public string PhoneNumber { get; set; } = null!;
-
         public DateTime DateOfBirth { get; set; }
-
         public DateTime HireDate { get; set; }
         public decimal Salary { get; set; }
 

@@ -1,10 +1,11 @@
-﻿namespace EmployeeManagementAPI.DAL.Interfaces
+﻿namespace EmployeeManagementAPI.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
-		Task<IList<Employee>> ListAsync(string? searchName, string? sortColumn, string? sortDirection);
+        Task<Employee> GetAsync(int id);
+        Task<IList<Employee>> ListAsync(string? searchName, string? sortColumn, string? sortDirection);
 		Task<bool> AddAsync(EmployeeCreateViewModel employee);
-		Task<int> UpdateAsync(Employee employee);
-		Task<int> DeleteAsync(int id);
+		Task<bool> UpdateAsync(Employee employee);
+		Task<bool> DeleteAsync(int id);
     }
 }

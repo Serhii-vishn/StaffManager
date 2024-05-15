@@ -1,4 +1,6 @@
-﻿using EmployeeManagementAPI.Models.ViewModels;
+﻿using EmployeeManagementAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace EmployeeManagementAPI.Controllers
 {
@@ -76,6 +78,78 @@ namespace EmployeeManagementAPI.Controllers
             {
                 await _employeeRepository.AddAsync(employee);
                 _logger.LogInformation($"Added new employee - {employee.FullName}");
+                return RedirectToAction("Index");
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                var employee = await _employeeRepository.GetAsync(id);
+                if(employee.Id <= 0) 
+                {
+                    TempData["errorMessage"] = $"Employee with id = {id} does not exist";
+                    return RedirectToAction("Index");
+                }                
+                return View(employee);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Employee model)
+        {
+            try
+            {
+                var result = await _employeeRepository.UpdateAsync(model);
+                if(!result)
+                {
+                    throw new ArgumentException("User dont updated");
+                }
+
+                _logger.LogInformation($"Updated employee - {model.Id}");
+                return RedirectToAction("Index");
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _employeeRepository.DeleteAsync(id);
+                _logger.LogInformation($"Deleted employee id - {id}");
                 return RedirectToAction("Index");
             }
             catch (ArgumentException ex)
