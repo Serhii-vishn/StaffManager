@@ -37,11 +37,10 @@ img {
     width: 100%;
 }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    overflow: hidden;
-    padding: 0 2rem;
+.table th,
+.table td {
+    text-align: center;
+    width:auto;
 }
 
 .navbar {
@@ -104,6 +103,7 @@ img {
 }
 
 .btn {
+    align-content: center;
     display: inline-block;
     background: var(--primary-color);
     color: #fff;
