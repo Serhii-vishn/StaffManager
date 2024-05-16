@@ -1,4 +1,6 @@
-﻿namespace EmployeeManagementAPI.Controllers
+﻿using System.Text;
+
+namespace EmployeeManagementAPI.Controllers
 {
     public class EmployeeController : Controller
     {
@@ -121,32 +123,6 @@
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(Employee model)
-        {
-            try
-            {
-                var result = await _employeeRepository.UpdateAsync(model);
-                if(!result)
-                {
-                    throw new ArgumentException("User dont updated");
-                }
-
-                _logger.LogInformation($"Updated employee - {model.Id}");
-                return RedirectToAction("Index");
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                return StatusCode(500);
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -173,5 +149,82 @@
                 return StatusCode(500);
             }
         }
-    }
+
+        [HttpGet]
+        public async Task<IActionResult> Salary(List<string> positionsFilter, List<string> departmentsFilter, string? startYear, string? endYear)
+        {
+            try
+            {
+                var employeeSalaries = await _employeeRepository.SalaryReportAsync(positionsFilter, departmentsFilter, startYear, endYear);
+
+                var departmentsList = await _departmentRepository.ListAsync();
+                var positionsList = await _positionRepository.ListAsync();
+                var model = new FilterSelectionViewModel
+                {
+                    Positions = positionsList.ToList(),
+                    Departments = departmentsList.ToList(),
+                    Report = employeeSalaries.ToList(),
+                    TotalSum = employeeSalaries.Sum(employee => employee.Salary)
+                };
+
+                return View(model);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Download(List<SalaryReportViewModel> report)
+        {
+            var strBuilder = new StringBuilder(string.Empty);
+
+            strBuilder.AppendLine("\t\tSalary Report");
+            foreach (var item in report)
+            {
+                strBuilder.AppendLine($"\n{item.FullName}\t{item.PhoneNumber}" +
+                    $"\t{item.Salary}\t{item.DepartmentName}" +
+                    $"\t{item.HireDate}\t{item.PositionName}");
+            }
+            strBuilder.AppendLine($"\nTotal\t\t{report.Sum(empl => empl.Salary)}");
+
+            var byteArray = Encoding.ASCII.GetBytes(strBuilder.ToString());
+            var stream = new MemoryStream(byteArray);
+
+            return File(stream, "text/plain", $"Salary_Report{DateTime.Now}.txt");
+        }
+
+        [HttpPost]
+		public async Task<IActionResult> Edit(Employee model)
+		{
+			try
+			{
+				var result = await _employeeRepository.UpdateAsync(model);
+				if (!result)
+				{
+					throw new ArgumentException("User dont updated");
+				}
+
+				_logger.LogInformation($"Updated employee - {model.Id}");
+				return RedirectToAction("Index");
+			}
+			catch (ArgumentException ex)
+			{
+				_logger.LogError(ex.Message, ex);
+				return BadRequest(ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex);
+				return StatusCode(500);
+			}
+		}
+	}
 }

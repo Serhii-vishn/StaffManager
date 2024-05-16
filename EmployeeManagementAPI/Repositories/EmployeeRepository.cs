@@ -111,8 +111,92 @@
 				}
 			}
 		}
-	
-		public async Task<bool> UpdateAsync(Employee employee)
+
+        public async Task<IList<SalaryReportViewModel>> SalaryReportAsync(List<string> positionsFilter, List<string> departmentsFilter, string? startYear, string? endYear)
+        {
+            var employeesList = new List<SalaryReportViewModel>();
+            using (var connection = new SqlConnection(_provider.GetConnectionString()))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    if(positionsFilter.Any())
+                    {
+                        command.CommandText = "GetByPositionEmployeesSalary";
+
+                        var positionsParams = string.Join(",", positionsFilter);
+                        command.Parameters.AddWithValue("@positionsIdList", positionsParams);
+                    }
+                    else if (departmentsFilter.Any())
+                    {
+                        command.CommandText = "GetByDepartmentEmployeesSalary";
+
+                        var departmentsParams = string.Join(",", departmentsFilter);
+                        command.Parameters.AddWithValue("@departmentIdList", departmentsParams);
+                    }
+                    else if(!string.IsNullOrEmpty(startYear) || !string.IsNullOrEmpty(endYear))
+                    {
+                        command.CommandText = "GetByHireDateEmployeesSalary";
+
+                        var startDate = new DateTime(int.Parse(startYear), 1, 1);
+                        var endDate = new DateTime(int.Parse(endYear), 1, 1);
+
+                        command.Parameters.AddWithValue("@startDate", startDate);
+                        command.Parameters.AddWithValue("@endDate", endDate);
+                    }
+                    else
+                    {
+                        return employeesList;
+                    }
+
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            if (command.CommandText.Equals("GetByPositionEmployeesSalary"))
+                            {
+                                var employee = new SalaryReportViewModel
+                                {
+                                    FullName = reader["FullName"]?.ToString(),
+                                    PhoneNumber = reader["PhoneNumber"]?.ToString(),
+                                    PositionName = reader["PositionName"]?.ToString(),
+                                    Salary = reader.GetDecimal(reader.GetOrdinal("Salary"))
+                                };
+                                employeesList.Add(employee);
+                            }
+                            else if (command.CommandText.Equals("GetByDepartmentEmployeesSalary"))
+                            {
+                                var employee = new SalaryReportViewModel
+                                {
+                                    FullName = reader["FullName"]?.ToString(),
+                                    PhoneNumber = reader["PhoneNumber"]?.ToString(),
+                                    DepartmentName = reader["DepartmentName"]?.ToString(),
+                                    Salary = reader.GetDecimal(reader.GetOrdinal("Salary"))
+                                };
+                                employeesList.Add(employee);
+                            }
+                            else if (command.CommandText.Equals("GetByHireDateEmployeesSalary"))
+                            {
+                                var employee = new SalaryReportViewModel
+                                {
+                                    FullName = reader["FullName"]?.ToString(),
+                                    PhoneNumber = reader["PhoneNumber"]?.ToString(),
+                                    HireDate = DateOnly.FromDateTime(Convert.ToDateTime(reader["HireDate"])),
+                                    Salary = reader.GetDecimal(reader.GetOrdinal("Salary"))
+                                };
+                                employeesList.Add(employee);
+                            }
+                        }
+                    }
+                }
+            }
+            return employeesList;
+        }
+
+        public async Task<bool> UpdateAsync(Employee employee)
 		{
             ValidateEmployee(employee);
 
