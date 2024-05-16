@@ -1,0 +1,175 @@
+﻿@model EmployeeManagementAPI.Models.ViewModels.FilterSelectionViewModel
+
+@{
+    ViewData["Title"] = "Salary Report";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Filters</h4>
+            <form asp-action="Salary" method="get">
+                <div class="dropdown col-md-7">
+                    <dt>
+                        <a href="#">
+                            <span class="hida">Position</span>
+                            <p class="multiSel"></p>
+                        </a>
+                    </dt>
+                    <dd class="dropdown-content">
+                        @using (Html.BeginForm("Index", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+                        {
+                            <div class="mutliSelect">
+                                <ul>
+                                    @foreach (var position in Model.Positions)
+                                    {
+                                        <li>
+                                            <input type="checkbox" id="position_@position" name="positionsFilter" value="@position.Id" />
+                                            <label for="position_@position">@position.Name</label>
+                                        </li>
+                                    }
+                                </ul>
+                                <input type="submit" value="Filter" />
+                            </div>
+                        }
+                    </dd>
+                </div>
+
+                <div class="dropdown col-md-7">
+                    <dt>
+                        <a href="#">
+                            <span class="hida">Department</span>
+                            <p class="multiSel"></p>
+                        </a>
+                    </dt>
+                    <dd class="dropdown-content">
+                        @using (Html.BeginForm("Salary", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+                        {
+                            <div class="mutliSelect">
+                                <ul>
+                                    @foreach (var department in Model.Departments)
+                                    {
+                                        <li>
+                                            <input type="checkbox" id="department_@department" name="departmentsFilter" value="@department.Id" />
+                                            <label for="department_@department">@department.Name</label>
+                                        </li>
+                                    }
+                                </ul>
+                                <input type="submit" value="Filter" />
+                            </div>
+                        }
+                    </dd>
+                </div>
+
+                @using (Html.BeginForm("Salary", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+                {
+                    <div class="dropdown col-md-7">
+                        <dt>
+                            <a href="#">
+                                <span class="hida">Hire year</span>
+                                <p class="multiSel"></p>
+                            </a>
+                        </dt>
+                        <dd class="dropdown-content">
+                            <div>
+                                <input type="range" id="startYearRange" class="YearRange" name="startYear" min="2000" max="@DateTime.Now.Year" value="2000" oninput="updateDisplay('start')">
+                                <span id="startYearDisplay">2000</span>
+                            </div>
+                            <div>
+                                <input type="range" id="endYearRange" class="YearRange" name="endYear" min="2000" max="@DateTime.Now.Year" value="@DateTime.Now.Year" oninput="updateDisplay('end')">
+                                <span id="endYearDisplay">@DateTime.Now.Year</span>
+                            </div>
+                            <input type="submit" value="Filter" />
+                        </dd>
+                    </div>
+                }
+            </form>
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <h4 class="m-3">Salary Report</h4>
+                        <button asp-action="DownloadReport" asp-controller="Employee" class="btn btn-primary">Download</button>
+                    </div>
+                    @if (Model.Report != null && Model.Report.Any())
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    @if (Model.Report.Any(e => !string.IsNullOrEmpty(e.FullName)))
+                                    {
+                                        <th>Full Name</th>
+                                    }
+                                    @if (Model.Report.Any(e => !string.IsNullOrEmpty(e.PhoneNumber)))
+                                    {
+                                        <th>Phone Number</th>
+                                    }
+                                    @if (Model.Report.Any(e => !string.IsNullOrEmpty(e.PositionName)))
+                                    {
+                                        <th>Position</th>
+                                    }
+                                    @if (Model.Report.Any(e => !string.IsNullOrEmpty(e.DepartmentName)))
+                                    {
+                                        <th>Department</th>
+                                    }
+                                    @if (Model.Report.Any(e => e.HireDate.HasValue))
+                                    {
+                                        <th>Hire Date</th>
+                                    }
+                                    @if (Model.Report.Any(e => e.Salary > 0))
+                                    {
+                                        <th>Salary</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var employee in Model.Report)
+                                {
+                                    <tr>
+                                        @if (!string.IsNullOrEmpty(employee.FullName))
+                                        {
+                                            <td>@employee.FullName</td>
+                                        }
+                                        @if (!string.IsNullOrEmpty(employee.PhoneNumber))
+                                        {
+                                            <td>@employee.PhoneNumber</td>
+                                        }
+                                        @if (!string.IsNullOrEmpty(employee.PositionName))
+                                        {
+                                            <td>@employee.PositionName</td>
+                                        }
+                                        @if (!string.IsNullOrEmpty(employee.DepartmentName))
+                                        {
+                                            <td>@employee.DepartmentName</td>
+                                        }
+                                        @if (employee.HireDate.HasValue)
+                                        {
+                                            <td>@employee.HireDate</td>
+                                        }
+                                        @if (employee.Salary > 0)
+                                        {
+                                            <td>@employee.Salary</td>
+                                        }
+                                    </tr>
+                                }
+                                <tr>
+                                    <td>
+                                        <b>Total Sum</b>
+                                    </td>
+                                    <td colspan="@(Model.Report.First().GetType().GetProperties().Count(p => p.GetValue(Model.Report.First()) != null) - 1)">
+                                        <b>@Model.TotalSum</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div>Select sorting options</div>
+                    }
+                </div>
+            </table>
+        </div>
+    </div>
+</div>

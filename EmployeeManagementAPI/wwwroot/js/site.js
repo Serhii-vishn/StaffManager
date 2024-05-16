@@ -20,3 +20,23 @@ document.querySelector('.dropdown-form').addEventListener('submit', function () 
         dropdown.classList.remove('show');
     }
 });
+
+var startRange = document.getElementById('startYearRange');
+var endRange = document.getElementById('endYearRange');
+var startDisplay = document.getElementById('startYearDisplay');
+var endDisplay = document.getElementById('endYearDisplay');
+
+function updateDisplay(type) {
+    var range;
+    var display;
+
+    if (type === 'start') {
+        range = startRange;
+        display = startDisplay;
+    } else {
+        range = endRange;
+        display = endDisplay;
+    }
+
+    display.textContent = range.value;
+}
