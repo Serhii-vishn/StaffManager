@@ -88,12 +88,24 @@
         <div class="col-md-8">
             <table class="table">
                 <div class="col-md-8">
-                    <div class="d-flex align-items-center mb-3">
-                        <h4 class="m-3">Salary Report</h4>
-                        <button asp-action="DownloadReport" asp-controller="Employee" class="btn btn-primary">Download</button>
-                    </div>
                     @if (Model.Report != null && Model.Report.Any())
                     {
+                        <div class="d-flex align-items-center mb-3">
+                            <h4 class="m-3">Salary Report</h4>
+                            @using (Html.BeginForm("Download", "Employee", FormMethod.Get, new { @class = "dropdown-form" }))
+                            {
+                                @for (int i = 0; i < Model.Report.Count; i++)
+                                {
+                                    <input type="hidden" name="report[@i].FullName" value="@Model.Report[i].FullName" />
+                                    <input type="hidden" name="report[@i].PhoneNumber" value="@Model.Report[i].PhoneNumber" />
+                                    <input type="hidden" name="report[@i].PositionName" value="@Model.Report[i].PositionName" />
+                                    <input type="hidden" name="report[@i].DepartmentName" value="@Model.Report[i].DepartmentName" />
+                                    <input type="hidden" name="report[@i].HireDate" value="@Model.Report[i].HireDate" />
+                                    <input type="hidden" name="report[@i].Salary" value="@Model.Report[i].Salary" />
+                                }
+                                <input class="btn btn-primary" type="submit" value="Download" />
+                            }
+                        </div>
                         <table class="table">
                             <thead>
                                 <tr>

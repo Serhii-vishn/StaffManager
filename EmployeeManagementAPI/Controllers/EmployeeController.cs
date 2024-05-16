@@ -180,12 +180,26 @@ namespace EmployeeManagementAPI.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> DownloadReport()
-        {
-            return Ok();
-        }
 
+        [HttpGet]
+        public async Task<IActionResult> Download(List<SalaryReportViewModel> report)
+        {
+            var strBuilder = new StringBuilder(string.Empty);
+
+            strBuilder.AppendLine("\t\tSalary Report");
+            foreach (var item in report)
+            {
+                strBuilder.AppendLine($"\n{item.FullName}\t{item.PhoneNumber}" +
+                    $"\t{item.Salary}\t{item.DepartmentName}" +
+                    $"\t{item.HireDate}\t{item.PositionName}");
+            }
+            strBuilder.AppendLine($"\nTotal\t\t{report.Sum(empl => empl.Salary)}");
+
+            var byteArray = Encoding.ASCII.GetBytes(strBuilder.ToString());
+            var stream = new MemoryStream(byteArray);
+
+            return File(stream, "text/plain", $"Salary_Report{DateTime.Now}.txt");
+        }
 
         [HttpPost]
 		public async Task<IActionResult> Edit(Employee model)
